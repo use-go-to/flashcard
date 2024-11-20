@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Interactive</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>FlashCard</h1>
+    <h2>(Physique C 01)</h2>
+    <div class="navigation-buttons">
+        <button id="liquideSolide">Liquide et Solide</button>
+        <button id="gaz">Gaz</button>
+        <button id="solution">Solution</button>
+    </div>
+
+    <div class="flashcard-container">
+        <div class="flashcard" id="flashcard">
+            <!-- Face avant : Question -->
+            <div class="front">
+                <p id="question">Formule du nombre d'Avogadro</p>
+            </div>
+            <!-- Face arrière : Réponse -->
+            <div class="back">
+                <p id="answer">
+                    <span class="inline-eq">
+                        N<sub>A</sub> = 
+                        <span class="fraction">
+                            <span class="numerator">N</span>
+                            <span class="denominator">n</span>
+                        </span>
+                        = 6,02 &times; 10<sup>23</sup> mol<sup>-1</sup>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boutons de navigation -->
+    <div class="navigation-buttons">
+        <button id="prevCard">Carte précédente</button>
+        <button id="nextCard">Carte suivante</button>
+    </div>
+
+    <script>
+        // Tableaux distincts pour chaque catégorie
+        const flashcardsLiquideSolide = [
+            {
+                question: "Mesure de quantité de matière (n) avec la masse (m)",
+                answer: `n = <span class="fraction"><span class="numerator">m</span><span class="denominator">M</span></span>`
+            },
+            {
+                question: "Masse molaire (M)",
+                answer: `M = <span class="fraction"><span class="numerator">m</span><span class="denominator">n</span></span>`
+            },
+            {
+                question: "Masse molaire moléculaire",
+                answer: `M(CH₄) = M(C) + 4 × M(H)`
+            },
+            {
+                question: "Mesure de quantité de matière (n) avec le volume (V)",
+                answer: `n = <span class="fraction"><span class="numerator">V × ρ</span><span class="denominator">M</span></span>`
+            },
+            {
+                question: "Masse volumique",
+                answer: `ρ<sub>substance</sub> = <span class="fraction"><span class="numerator">m<sub>substance</sub></span><span class="denominator">V<sub>substance</sub></span></span>`
+            },
+            {
+                question: "Densité (sans unité)",
+                answer: `d<sub>solution</sub> = <span class="fraction"><span class="numerator">ρ<sub>solution</sub></span><span class="denominator">ρ<sub>eau</sub></span></span>`
+            }
+        ];
+
+        const flashcardsGaz = [
+            {
+                question: "Volume molaire",
+                answer: `V<sub>M</sub> = <span class="fraction"><span class="numerator">V<sub>gaz</sub></span><span class="denominator">n</span></span> = <span class="fraction"><span class="numerator">R × T</span><span class="denominator">p</span></span>`
+            },
+            {
+                question: "Loi des gaz parfaits",
+                answer: `p × V<sub>gaz</sub> = n × R × T`
+            }
+        ];
+
+        const flashcardsSolution = [
+            {
+                question: "Concentration en masse",
+                answer: `C<sub>soluté</sub> = <span class="fraction"><span class="numerator">n<sub>soluté</sub></span><span class="denominator">V<sub>solution</sub></span></span>`
+            },
+            {
+                question: "Dilution",
+                answer: `C<sub>fille</sub> × V<sub>fille</sub> = C<sub>mère</sub> × V<sub>mère</sub>`
+            },
+            {
+                question: "Loi de Beer-Lambert absorbance (sans unité)",
+                answer: `A = C × l × ε`
+            },
+            {
+                question: "Concentration en masse",
+                answer: `<span class="small-text">ρ<sub>soluté</sub> = <span class="fraction"><span class="numerator">m<sub>soluté</sub></span><span class="denominator">V<sub>solution</sub></span></span> = C<sub>soluté</sub> × M<sub>soluté</sub></span>`
+            },
+            {
+                question: "Pourcentage en masse",
+                answer: `P<sub>m</sub> = <span class="fraction"><span class="numerator">m<sub>soluté</sub></span><span class="denominator">m<sub>solution</sub></span></span>`
+            }
+        ];
+
+        let currentIndex = 0;
+        let currentCategory = flashcardsLiquideSolide;
+
+        // Mise à jour du contenu de la carte
+        function updateFlashcard(index) {
+            const questionElement = document.getElementById('question');
+            const answerElement = document.getElementById('answer');
+            const flashcardElement = document.getElementById('flashcard');
+
+            // Réinitialiser la rotation de la carte
+            flashcardElement.classList.remove('flipped');
+
+            // Mettre à jour le contenu
+            questionElement.innerHTML = currentCategory[index].question;
+            answerElement.innerHTML = currentCategory[index].answer;
+        }
+
+        // Gestion de la rotation de la carte
+        document.getElementById('flashcard').addEventListener('click', function () {
+            this.classList.toggle('flipped');
+        });
+
+        // Gestion des boutons de navigation
+        document.getElementById('prevCard').addEventListener('click', function () {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateFlashcard(currentIndex);
+            } else {
+                alert("C'est la première carte !");
+            }
+        });
+
+        document.getElementById('nextCard').addEventListener('click', function () {
+            if (currentIndex < currentCategory.length - 1) {
+                currentIndex++;
+                updateFlashcard(currentIndex);
+            } else {
+                alert("C'est la dernière carte !");
+            }
+        });
+
+        // Changer de catégorie : Liquide et Solide, Gaz ou Solution
+        document.getElementById('liquideSolide').addEventListener('click', function() {
+            currentCategory = flashcardsLiquideSolide;
+            currentIndex = 0;
+            updateFlashcard(currentIndex);
+        });
+
+        document.getElementById('gaz').addEventListener('click', function() {
+            currentCategory = flashcardsGaz;
+            currentIndex = 0;
+            updateFlashcard(currentIndex);
+        });
+
+        document.getElementById('solution').addEventListener('click', function() {
+            currentCategory = flashcardsSolution;
+            currentIndex = 0;
+            updateFlashcard(currentIndex);
+        });
+
+        // Initialisation
+        updateFlashcard(currentIndex);
+    </script>
+</body>
+</html>
